@@ -15,13 +15,16 @@
 		"@internationalized/date": "^3.8.0",
 		"@lucide/svelte": "^0.509.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
+		"@sveltejs/adapter-vercel": "^5.7.2",
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@tailwindcss/container-queries": "^0.1.1",
 		"@tailwindcss/forms": "^0.5.10",
 		"@tailwindcss/typography": "^0.5.16",
+		"add": "^2.0.6",
 		"autoprefixer": "^10.4.20",
 		"bits-ui": "^1.4.8",
+		"bun": "^1.2.13",
 		"clsx": "^2.1.1",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
@@ -34,7 +37,6 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
-		"mode-watcher": "^1.0.7",
-		"svelte-adapter-bun": "^0.5.2"
+		"mode-watcher": "^1.0.7"
 	}
 }
