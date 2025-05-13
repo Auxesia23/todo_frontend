@@ -3,7 +3,19 @@
     import * as Card from "$lib/components/ui/card";
     import { Input } from "$lib/components/ui/input";
     import { Label } from "$lib/components/ui/label";
-    let {form} = $props();
+    import { toast } from "svelte-sonner";
+    let {form, data} = $props();
+
+
+    async function googleLogin() {
+      const resp = await fetch(`${data.API_BASE_URL}/auth/login/google`)
+      const result = await resp.json()
+      if (resp.ok) {
+        window.location.href = result.url
+      } else {
+        toast.error("ERROR", {description : "Failed to get Google login URL"});
+      }
+    }
   </script>
   
   <form method="POST" class="flex h-screen w-full items-center justify-center px-4">
@@ -32,7 +44,7 @@
             <p class="text-sm text-red-500 mt-2">{form.error}</p>
           {/if}
           <Button type="submit" class="w-full">Register</Button>
-          <Button variant="outline" class="w-full">Sign up with Google</Button>
+          <Button onclick={() => googleLogin()} variant="outline" class="w-full">Sign up with Google</Button>
         </div>
         <div class="mt-4 text-center text-sm">
           Already have an account?

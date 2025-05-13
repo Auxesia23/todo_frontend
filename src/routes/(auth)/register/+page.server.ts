@@ -1,6 +1,13 @@
 import type { Actions } from './$types';
+import type { PageLoad } from '../../$types';
 import { fail, redirect } from '@sveltejs/kit';
 import { API_BASE_URL } from '$env/static/private';
+
+export const load: PageLoad = ({ }) => {
+  return {
+    API_BASE_URL : API_BASE_URL
+  };
+};
 
 export const actions: Actions = {
   default: async ({ request, cookies }) => {
