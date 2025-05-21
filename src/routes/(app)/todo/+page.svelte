@@ -33,6 +33,9 @@
     let deleteTargetId = $state<number|null>(null);
 
     let isLoading = $state<boolean>(false);
+    let addLoading = $state<boolean>(false)
+    let deleteLoading = $state<boolean>(false)
+    let editLoading = $state<boolean>(false)
 
     function confirmDelete(id: number) {
         deleteTargetId = id;
@@ -49,6 +52,7 @@
     
    
     async function addTodo() {
+        addLoading = true
         const dateString = formatDate(value)
         try {
             const response = await fetch(`${data.API_BASE_URL}/todo`, {
@@ -70,38 +74,44 @@
     
             toast.success("SUCCESS",{ description: "New to do has been created"})
             dialogOpen = false
+            addLoading = false
         } catch (error) {
             console.error('Error fetching todos:', error);
+            addLoading = false
         }
     }
 
 
     async function updateStatus(id: number) {
-	try {
-		const response = await fetch(`${data.API_BASE_URL}/todo/${id}`, {
-			method: 'PUT',
-			headers: {
-				'Authorization': 'Bearer ' + data.token,
-			},
-		});
+        editLoading = true
+        try {
+            const response = await fetch(`${data.API_BASE_URL}/todo/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': 'Bearer ' + data.token,
+                },
+            });
 
-		if (response.status !== 200) {
-			toast.error("ERROR", { description: "Error updating todo" });
-			return;
-		}
+            if (response.status !== 200) {
+                toast.error("ERROR", { description: "Error updating todo" });
+                return;
+            }
 
-		todos = todos.map(todo =>
-			todo.id === id ? { ...todo, completed: !todo.completed } : todo
-		);
+            todos = todos.map(todo =>
+                todo.id === id ? { ...todo, completed: !todo.completed } : todo
+            );
 
-		toast.success("SUCCESS", { description: "Todo status updated" });
+            toast.success("SUCCESS", { description: "Todo status updated" });
+            editLoading = false
 
-	} catch (err) {
-		console.error("Update status error:", err);
-		toast.error("ERROR", { description: "Network error while updating todo" });
-	}}
+        } catch (err) {
+            console.error("Update status error:", err);
+            toast.error("ERROR", { description: "Network error while updating todo" });
+            editLoading = false
+        }}
 
     async function deleteTodo(id: number | null) {
+        deleteLoading = true
         try {
             const response = await fetch(`${data.API_BASE_URL}/todo/${id}`, {
                 method: 'DELETE',
@@ -119,10 +129,12 @@
 
             todos = todos.filter(todo => todo.id !== id);
             toast.success("SUCCESS", { description: "Todo deleted successfully" });
+            deleteLoading = false
 
         } catch (err) {
             console.error("Delete todo error:", err);
             toast.error("ERROR", { description: "Network error while deleting todo" });
+            deleteLoading = false
         }
     }
 
@@ -269,7 +281,9 @@
                       </div>
                   </div>
                   <Dialog.Footer>
-                    <Button onclick={addTodo} type="submit">Save</Button>
+                    <Button onclick={addTodo} type="submit" disabled={addLoading}>
+                        {addLoading ? 'Loading...' : 'Save'}
+                    </Button>
                   </Dialog.Footer>
                 </Dialog.Content>
               </Dialog.Root>
@@ -329,7 +343,7 @@
                                       </AlertDialog.Header>
                                       <AlertDialog.Footer>
                                         <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-                                        <AlertDialog.Action onclick={() => deleteTodo(deleteTargetId)}>Continue</AlertDialog.Action>
+                                        <AlertDialog.Action disabled={deleteLoading} onclick={() => deleteTodo(deleteTargetId)}>{deleteLoading? "Loading..." : "Continue"}</AlertDialog.Action>
                                       </AlertDialog.Footer>
                                     </AlertDialog.Content>
                                   </AlertDialog.Root>
